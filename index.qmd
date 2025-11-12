@@ -9,7 +9,7 @@ format:
     height: 720
     include-after-body: 
       - "all-the-js-code.html"
-pagetitle: Title of Talk
+pagetitle: Hyperparameter Fine-Tuning in tidymodels
 echo: true
 cache: true
 code-line-numbers: false
