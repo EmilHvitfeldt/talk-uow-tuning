@@ -1,0 +1,133 @@
+$colors: (
+  "purple-dark": #20204B,
+  "purple-medium": #3b4695,
+  "purple-light": #8E7CC3,
+  "pink": #D473C0,
+  "yellow": #EBB671,
+  "white": #FFFFFF,
+  "black": #222222
+);
+
+@import url('https://fonts.googleapis.com/css2?family=Delius+Swash+Caps&family=Didact+Gothic&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap');
+
+/*-- scss:functions --*/
+
+@function theme-color($color) {
+  @return map-get($colors, $color);
+}
+
+/*-- scss:defaults --*/
+
+$presentation-heading-font: "Delius Swash Caps";
+$font-family-sans-serif: "Didact Gothic";
+$font-family-monospace: "Source Code Pro";
+
+$body-color: theme-color("white");
+$body-bg: theme-color("black");
+$link-color: theme-color("pink");
+
+$presentation-heading-color: theme-color("yellow");
+
+$code-color: theme-color("pink");
+
+/*-- scss:rules --*/
+
+.heading-font {
+  font-family: $presentation-heading-font;
+}
+
+@mixin background-full {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+@mixin theme-slide($number) {
+  .theme-slide#{$number} {
+    &:is(.slide-background) {
+      background-image: url('../../../../../assets/slide#{$number}.webp');
+      @include background-full;
+    }
+  }
+}
+
+@for $i from 1 through 5 {
+  @include theme-slide($i);
+}
+
+.reveal .slide ol li {
+  margin-top: 2em !important;
+}
+
+.reveal .slides section .fragment.highlight-pink {
+  opacity: unset;
+  visibility: unset;
+
+  &.visible {
+    color: theme-color("pink");
+  }
+
+  &.current-fragment {
+    color: theme-color("pink");
+  }
+}
+
+.reveal div.sourceCode {
+  border: none
+}
+
+code {
+  span.an, // Attribute
+  span.op, // Operator
+  span.sc, // SpecialChar
+  span.in, // Information
+  span.wa, // Warning
+  span.do, // Documentation
+  span.cv, // CommentVar
+  span.co {// Comment
+    color: theme-color("purple-light");
+  }
+
+  span.er, // Error
+  span.bn, // BaseN
+  span.al, // Alert
+  span.pp, // Preprocessor
+  span.dt, // DataType
+  span.fl, // Float
+  span.dv {// DecVal
+    color: theme-color("yellow");
+  }
+
+  span.ss, // SpecialString
+  span.st, // String
+  span.vs, // VerbatimString
+  span.ch {// Char
+    color: theme-color("yellow");
+  }
+
+  span.ot, // Other
+  span.cf, // ControlFlow
+  span.kw {// Keyword
+    color: theme-color("purple-light");
+  }
+
+  span.at {// Attribute
+    color: theme-color("purple-light");
+  }
+
+  span.fu {// Function
+    color: theme-color("pink");
+  }
+
+  span.va {// Variable
+    color: #111111;
+  }
+
+  span.im {// Import
+    color: #00769E;
+  }
+
+  span.cn {// Constant
+    color: theme-color("yellow");
+  }
+}

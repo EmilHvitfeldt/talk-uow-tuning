@@ -1,0 +1,570 @@
+---
+format:
+  revealjs: 
+    theme:
+      - default
+      - styles.scss
+      - _extensions/emilhvitfeldt/color-classes/color-classes.scss
+    width: 1280
+    height: 720
+    include-after-body: 
+      - "all-the-js-code.html"
+pagetitle: Title of Talk
+echo: true
+cache: true
+code-line-numbers: false
+---
+
+## {.theme-slide1}
+
+<br>
+
+[Hyperparameter Fine-Tuning in [tidymodels]{.text-yellow}]{.heading-font .text-pink style="font-size:120px;"}
+
+<br>
+
+::: {.columns}
+::: {.column}
+
+[Posit Days]{.heading-font .text-yellow}
+
+[University of Wisconsin]{.heading-font .text-yellow}
+
+:::
+::: {.column style="text-align:right;"}
+
+[Emil Hvitfeldt]{.heading-font .text-pink}\ \ \ \ 
+
+[2025-11-12]{.heading-font .text-pink}\ \ \ \ 
+
+:::
+:::
+
+## Ames data {.theme-slide2}
+
+```{r}
+library(tidymodels)
+
+set.seed(1234)
+ames_split <- initial_split(ames)
+ames_training <- training(ames_split)
+ames_testing <- testing(ames_split)
+
+glimpse(ames_training)
+```
+
+## A model {.theme-slide3}
+
+```{r}
+
+rec_spec <- recipe(Sale_Price ~ ., data = ames_training) |>
+  step_nzv(all_numeric_predictors()) |>
+  step_normalize(all_numeric_predictors()) |>
+  step_dummy(all_nominal_predictors()) |>
+  step_nzv(all_predictors())
+
+mod_spec <- nearest_neighbor("regression", "kknn", neighbors = 5)
+
+wf_spec <- workflow(rec_spec, mod_spec)
+
+wf_fit <- fit(wf_spec, ames_training)
+```
+
+## A Model fit {.theme-slide4}
+
+```{r}
+wf_fit
+```
+
+## Motivation {.theme-slide1}
+
+<br>
+
+We are working on a supervised modeling task (regression, classification, survival analysis)
+
+<br>
+
+Part of your model workflow (preprocessing, model, postprocessing) has a parameter that can't be estimated from the data directly
+
+## Is it a hyperparameters? {.theme-slide2}
+
+<br>
+
+::: {.columns}
+::: {.column}
+
+### [No]{.text-pink}
+
+- intercept in linear model
+- family in error
+- random seed
+
+:::
+::: {.column}
+
+### [Yes]{.text-pink}
+
+- Tree depth in decision trees
+- Number of neighbors in a K-Nearest Neighbor model
+- Number of PCs to keep
+
+:::
+:::
+
+## Hyperparameter Tuning {.theme-slide3}
+
+1. [Try different values]{.fragment .highlight-pink} and measure their performance.
+
+1. [Find good values]{.fragment .highlight-pink} for these parameters.
+
+1. Once the value(s) of the parameter(s) are determined, a model can be finalized by fitting the model to the entire training set.
+
+## The two main strategies for optimization {.theme-slide4}
+
+<br><br>
+
+::: {.columns}
+::: {.column}
+
+### [Grid Search]{.text-pink}
+
+which tests a pre-defined set of candidate values.
+
+:::
+::: {.column}
+
+### [Iterative Search]{.text-pink}
+
+which suggests/estimates new values of candidate parameters to evaluate.
+
+:::
+:::
+
+# Grid Search {.theme-slide1}
+
+## Specify what to tune {.theme-slide2}
+
+```{r}
+mod_spec <- nearest_neighbor("regression", "kknn", neighbors = tune())
+
+wf_spec <- workflow(rec_spec, mod_spec)
+```
+
+## {.theme-slide3}
+
+::: {.r-fit-text .heading-font .text-yellow}
+How can we use 
+
+the training data 
+
+to [compare]{.fragment .highlight-pink} and [evaluate]{.fragment .highlight-pink}
+
+different models?
+:::
+
+## {.theme-slide4}
+
+![](figures/resampling.svg){fig-align="center"}
+
+## Cross-validation {.theme-slide1}
+
+<br>
+
+![](figures/three-CV.svg){fig-align="center"}
+
+## Cross-validation {.theme-slide2}
+
+![](figures/three-CV-iter.svg){fig-align="center"}
+
+## Fitting multiple values {.theme-slide3}
+
+```{r}
+grid <- tibble(
+  neighbors = c(3, 5, 11, 19, 55)
+)
+
+set.seed(1234)
+ames_folds <- vfold_cv(ames_training, v = 5)
+
+tune_res <- tune_grid(wf_spec, resamples = ames_folds, grid = grid)
+```
+
+## Results {.theme-slide4}
+
+```{r}
+collect_metrics(tune_res)
+```
+
+## Results {.theme-slide1}
+
+```{r}
+autoplot(tune_res) + theme_minimal()
+```
+
+## Creating parameter grids {.theme-slide2}
+
+```{r}
+params <- extract_parameter_set_dials(wf_spec)
+```
+
+::: {.columns}
+::: {.column}
+
+```{r}
+grid_random(params, size = 7)
+```
+
+:::
+::: {.column}
+
+```{r}
+grid_regular(params, levels = 7)
+```
+
+:::
+:::
+
+## Update Ranges {.theme-slide3}
+
+```{r}
+params <- params |>
+  update(neighbors = neighbors(c(1, 55)))
+```
+
+::: {.columns}
+::: {.column}
+
+```{r}
+grid_random(params, size = 7)
+```
+
+:::
+::: {.column}
+
+```{r}
+grid_regular(params, levels = 7)
+```
+
+:::
+:::
+
+## Having multiple hyperparameters {.theme-slide4}
+
+So far the changeles have been fairly minor due to only having 1 hyper parameter.
+
+as we increase the number of hyperparameters we start running into other types of issues.
+
+## Xgboost model {.theme-slide1}
+
+```{r}
+mod_spec <- boost_tree(
+  mode = "regression", 
+  engine = "xgboost", 
+  trees = tune(), 
+  tree_depth = tune(), 
+  learn_rate = tune(), 
+  min_n = tune(),
+  loss_reduction = tune()
+)
+
+wf_spec <- workflow(rec_spec, mod_spec)
+```
+
+## Creating parameter grids {.theme-slide2}
+
+```{r}
+params <- extract_parameter_set_dials(wf_spec)
+```
+
+::: {.columns}
+::: {.column}
+
+```{r}
+grid_random(params, size = 7)
+```
+
+:::
+::: {.column}
+
+```{r}
+grid_regular(params, levels = 7)
+```
+
+:::
+:::
+
+## Different types of grids {.theme-slide3}
+
+```{r} 
+#| label: grid-types
+#| echo: false
+#| fig-width: 10
+#| fig-height: 2.7
+#| fig-align: 'center'
+#| out-width: 100%
+
+nnet_plot_param <- parameters(trees(), learn_rate())
+
+reg_1 <- grid_regular(nnet_plot_param, levels = c(4, 4)) |> 
+  mutate(type = "Regular (balanced)")
+reg_2 <- grid_regular(nnet_plot_param, levels = c(3, 5)) |> 
+  mutate(type = "Regular (unbalanced)")
+
+irreg_1 <- grid_space_filling(nnet_plot_param, size = 16, type = "uniform") |> 
+  mutate(type = "SFD: Uniform")
+
+set.seed(431)
+irreg_2 <- grid_random(nnet_plot_param, size = 16) |> 
+  mutate(type = "Random")
+irreg_3 <- grid_space_filling(nnet_plot_param, size = 16, type = "latin_hypercube") |> 
+  mutate(type = "SFD: Latin Hypercube")
+
+lvls <- c("Regular (balanced)", "Regular (unbalanced)", "Random", 
+          "SFD: Latin Hypercube", "SFD: Uniform")
+
+grids <- 
+  bind_rows(reg_1, reg_2, irreg_1, irreg_2, irreg_3) |> 
+  mutate(type = factor(type, levels = lvls))
+
+grids |> 
+  ggplot(aes(trees, learn_rate)) + 
+  geom_point() + 
+  scale_y_log10() +
+  facet_wrap(~ type, nrow = 1) +
+  labs(x = trees()$label, y = learn_rate()$label)
+```
+
+[Space-filling designs](https://aml4td.org/chapters/grid-search.html#sec-irregular-grid) (SFD) attempt to cover the parameter space without redundant candidates. We recommend these the most, and they are the default. 
+
+## Space Filling Grids {.theme-slide4}
+
+```{r}
+grid <- grid_space_filling(params, size = 50)
+grid
+```
+
+## Space Filling Grids {.theme-slide1}
+
+We default to space filling designs in `tune_grid()`
+
+`?tune_grid()`:
+
+> If no tuning grid is provided, a grid (via `dials::grid_space_filling()`) is created with 10 candidate parameter combinations.
+
+# Iterative Search {.theme-slide2}
+
+## Iterative Search Idea {.theme-slide3}
+
+<br> <br> <br>
+
+Instead of pre-defining a grid of candidate points, we can model our current results to predict what the next candidate point should be.
+
+## Gaussian Process - idea {.theme-slide4}
+
+The GP model can take candidate tuning parameter combinations as inputs and make predictions for performance (e.g. Brier, ROC AUC, RMSE, etc.)
+
+<br>
+
+- The mean performance
+- The variance of performance
+
+<br>
+
+The predicted variance is zero at locations of actual data points and becomes very high when far away from any observed data.
+
+## Gaussian Process - Balance {.theme-slide1}
+
+New candidates are picked to balance 
+
+<br> <br>
+
+- exploring the space far away
+- selecting points near existing values
+
+## Gaussian Process - loop {.theme-slide2}
+
+Once we pick the candidate point, we measure performance for it (e.g. resampling).
+
+<br>
+
+Another GP is fit, new candidates are computed
+
+<br>
+
+We stop when we have completed the allowed number of iterations or if we don’t see any improvement after a pre-set number of attempts.
+
+## Gaussian Process in tidymodels {.theme-slide3}
+
+Implemented via `tune_bayes()`
+
+```{r}
+#| eval: false
+tune_res <- tune_grid(wf_spec, resamples = ames_folds, grid = grid)
+
+bayes_res <- tune_bayes(
+  wf_spec, 
+  resamples = ames_folds, 
+  initial = tune_res,
+  iter = 25
+)
+```
+
+## More about Iterative Search {.theme-slide4}
+
+There are [a lot of other iterative methods](https://github.com/topepo/Optimization-Methods-for-Tuning-Predictive-Models) that you can use.
+
+::: {.columns}
+::: {.column}
+
+<br> <br>
+
+The [{finetune}](https://finetune.tidymodels.org/) package also has functions for [simulated annealing](https://www.tmwr.org/iterative-search.html#simulated-annealing) search.
+
+:::
+::: {.column}
+
+![](figures/finetune.svg){width=50%}
+
+:::
+:::
+
+# Select the model {.theme-slide1}
+
+## Seeing the results {.theme-slide2}
+
+You have fitted all the models you wanted we can take a look at the performance with `autoplot()` and `collect_metrics()`
+
+We can also use `show_best()` for convenience 
+
+```{r}
+show_best(tune_res, metric = "rmse")
+```
+
+## Selecting the best {.theme-slide3}
+
+We can use `select_best()` to pick the most performant model
+
+```{r}
+select_best(tune_res, metric = "rmse")
+```
+
+but remember how this performing hyper parameter set performanced very similarly to the other choices
+
+## Selecting the best under constraints {.theme-slide4}
+
+`select_by_pct_loss()` uses the "one-standard error rule" (Breiman _el at, 1984) that selects the most simple model that is within one standard error of the numerically optimal results.
+
+`select_by_pct_loss()` selects the most simple model whose loss of performance is within some acceptable limit.
+
+```{r}
+select_by_pct_loss(tune_res, neighbors, metric = "rmse")
+```
+
+## Sub-Model Trick {.theme-slide1}
+
+Some engines allow you to fit a single model and pretend to predict from a model with different hyperparameters.
+
+A boosted tree model fit with [1000]{.text-pink} trees can pretend to predict with [500]{.text-pink} or [100]{.text-pink} trees.
+
+Same for other tree and regularized models
+
+# Parallel {.theme-slide2}
+
+## Running in parallel {.theme-slide3}
+
+-   Grid search, combined with resampling, requires fitting a lot of models!
+
+-   These models don't depend on one another and can be run in parallel.
+
+We can use the future or mirai packages to do this:
+
+```{r}
+cores <- parallelly::availableCores(logical = FALSE)
+```
+
+<br>
+
+::: columns
+::: {.column width="50%"}
+
+```{r}
+#| eval: false
+#| label: parallel-future
+
+library(future)
+plan(multisession, workers = cores)
+
+# Now call `tune_grid()`!
+```
+:::
+
+::: {.column width="50%"}
+```{r}
+#| eval: false
+#| label: mirai-methods
+library(mirai)
+daemons(cores)
+
+# Now call `tune_grid()`!
+```
+:::
+:::
+
+# Racing {.theme-slide4}
+
+## Model Racing {.theme-slide1}
+
+Racing is an old tool that we can use to go even faster.
+
+1. Evaluate all of the candidate models, but only for a few resamples.
+1. Determine which candidates have a low probability of being selected.
+1. Eliminate poor candidates.
+1. Repeat with next resample (until no more resamples remain).
+1. This can result in fitting a small number of models.
+
+It is not an iterative search; it is an adaptive grid search.
+
+## Discarding Candidates {.theme-slide2}
+
+How do we eliminate tuning parameter combinations?
+
+<br>
+
+There are a few methods to do so. We’ll use one based on analysis of variance (ANOVA).
+
+<br>
+
+However... there is typically a large resampling effect in the results.
+
+## Are Candidates Different? {.theme-slide3}
+
+One way to evaluate these models is to do a paired t-test
+
+<br>
+
+or a t-test on their differences matched by resamples
+With `n = 10` resamples, the confidence interval for the difference in the model error is (0.99, 2.8), indicating that candidate number 2 has a smaller error.
+
+## Racing in tidymodels {.theme-slide4}
+
+`tune_race_anova()` has a very similar interface as `tune_grid()`
+
+<br>
+
+```{r}
+#| eval: false
+library(finetune)
+tune_res <- tune_race_anova(
+  wf_spec,
+  resamples = ames_folds,
+  grid = 50
+)
+```
+
+## Thanks!! {.theme-slide1}
+
+More Information
+
+- [tune package](https://tune.tidymodels.org/)
+- [finetune package](https://finetune.tidymodels.org/)
+- [tidy modeling with R book](https://www.tmwr.org/grid-search)
