@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 58.11 57.23">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: url(#radial-gradient);
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5 {
+        fill-rule: evenodd;
+      }
+
+      .cls-2 {
+        fill: url(#radial-gradient-5);
+      }
+
+      .cls-3 {
+        fill: url(#radial-gradient-4);
+      }
+
+      .cls-4 {
+        fill: url(#radial-gradient-3);
+      }
+
+      .cls-5 {
+        fill: url(#radial-gradient-2);
+      }
+    </style>
+    <radialGradient id="radial-gradient" cx="-806.39" cy="226.49" fx="-806.39" fy="226.49" r="3.05" gradientTransform="translate(2491.12 723.89) scale(3.05 -3.05)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f3d5ab"/>
+      <stop offset="1" stop-color="#dc9b3f"/>
+    </radialGradient>
+    <radialGradient id="radial-gradient-2" cx="-828.5" cy="265.39" fx="-828.5" fy="265.39" r="3.23" gradientTransform="translate(2703.68 880.96) scale(3.23 -3.23)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f3d5ab"/>
+      <stop offset="1" stop-color="#dc9b3f"/>
+    </radialGradient>
+    <radialGradient id="radial-gradient-3" cx="-955.81" cy="473.35" fx="-955.81" fy="473.35" r="4.82" gradientTransform="translate(4636.6 2309.35) scale(4.82 -4.82)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f3d5ab"/>
+      <stop offset="1" stop-color="#dc9b3f"/>
+    </radialGradient>
+    <radialGradient id="radial-gradient-4" cx="-932.99" cy="435.89" fx="-932.99" fy="435.89" r="4.43" gradientTransform="translate(4161.29 1958.11) scale(4.43 -4.43)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f3d5ab"/>
+      <stop offset="1" stop-color="#dc9b3f"/>
+    </radialGradient>
+    <radialGradient id="radial-gradient-5" cx="102.51" cy="-1256.78" fx="102.51" fy="-1256.78" r=".95" gradientTransform="translate(-56.76 -1158.95) scale(.95 -.95)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f3d5ab"/>
+      <stop offset="1" stop-color="#dc9b3f"/>
+    </radialGradient>
+  </defs>
+  <path class="cls-1" d="M36.98,31.93c.86,0,.86,1.28,0,1.28h-14.37c-.85,0-.85-1.28,0-1.28h14.37ZM22.61,30.65c-1.06,0-1.93.85-1.93,1.91s.87,1.93,1.93,1.93h14.37c1.06,0,1.93-.85,1.93-1.93s-.87-1.91-1.93-1.91h-14.37Z"/>
+  <path class="cls-5" d="M29.8,20.78c2.71,0,4.71,2.58,4.03,5.21-.11.41.2.8.61.8h2.56s.04,0,.05,0c.84,0,.84,1.28,0,1.28-.02,0-.04,0-.05,0h-4.71c-.56,0-.85-.69-.45-1.09,1.82-1.82.52-4.9-2.04-4.9s-3.84,3.08-2.04,4.9c.41.41.13,1.09-.45,1.09h-4.69s-.04,0-.05,0c-.84,0-.84-1.28,0-1.28.02,0,.04,0,.05,0h2.52c.41,0,.72-.39.61-.8-.69-2.63,1.32-5.21,4.04-5.21ZM29.79,19.5c-3.23,0-5.75,2.8-5.4,6.01h-1.85c-1.06,0-1.92.86-1.92,1.93s.86,1.93,1.92,1.93h4.76c1.73-.02,2.58-2.08,1.37-3.3-1.02-1-.3-2.73,1.13-2.73s2.13,1.72,1.11,2.73c-1.21,1.22-.35,3.28,1.37,3.3h4.76c1.06,0,1.92-.88,1.92-1.93s-.86-1.93-1.92-1.93h-1.85c.35-3.21-2.17-6.01-5.42-6.01Z"/>
+  <path class="cls-4" d="M29.79,11.46c-1.87,0-3.75.32-5.57.97-5.99,2.17-10.2,7.61-10.78,13.95-.59,6.34,2.54,12.46,8.03,15.67,2.58,1.51,5.46,2.27,8.34,2.27,3.26,0,6.5-.97,9.29-2.88.55-.41.17-1.17-.37-1.17-.11,0-.23.04-.35.11-2.61,1.79-5.6,2.66-8.57,2.66-4.37,0-8.68-1.88-11.65-5.46-5.01-6.01-4.6-14.86.93-20.39,2.95-2.95,6.83-4.45,10.72-4.45,3.42,0,6.85,1.16,9.66,3.5,6.03,5.01,7.23,13.76,2.8,20.22-.37.51.08,1.05.54,1.05.19,0,.38-.09.52-.3,4.49-6.53,3.67-15.34-1.93-20.94h.02c-3.14-3.14-7.34-4.81-11.62-4.81Z"/>
+  <path class="cls-3" d="M29.8,15.31c1.62,0,3.25.32,4.81.96,4.69,1.95,7.77,6.53,7.77,11.63-.02,6.94-5.64,12.58-12.58,12.58-5.1,0-9.68-3.06-11.63-7.77-1.95-4.69-.87-10.11,2.73-13.71,2.41-2.41,5.63-3.69,8.9-3.69ZM29.79,14.03c-2.67,0-5.35.77-7.7,2.34-5.49,3.67-7.62,10.72-5.1,16.84,2.17,5.25,7.29,8.55,12.81,8.55.89,0,1.79-.08,2.7-.26,6.49-1.3,11.17-6.99,11.17-13.6,0-3.69-1.45-7.21-4.06-9.81-2.68-2.68-6.23-4.06-9.81-4.06Z"/>
+  <path class="cls-2" d="M40.97,38.42c-.57,0-.87.69-.46,1.09.13.13.3.2.46.2.33,0,.64-.25.64-.64,0-.35-.28-.65-.63-.65Z"/>
+</svg>
