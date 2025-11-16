@@ -131,3 +131,8 @@ code {
     color: theme-color("yellow");
   }
 }
+
+.reveal img {
+  max-width: unset;
+  max-height: unset;
+}

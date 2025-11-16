@@ -33,12 +33,13 @@ code-line-numbers: false
 :::
 ::: {.column style="text-align:right;"}
 
-[Emil Hvitfeldt]{.heading-font .text-pink}\ \ \ \ 
+[Emil Hvitfeldt]{.heading-font .text-pink}    
 
-[2025-11-12]{.heading-font .text-pink}\ \ \ \ 
+[2025-11-12]{.heading-font .text-pink}    
 
 :::
 :::
+
 
 ## Ames data {.theme-slide2}
 
@@ -141,6 +142,8 @@ which suggests/estimates new values of candidate parameters to evaluate.
 :::
 
 # Grid Search {.theme-slide1}
+
+![](assets/big/leo.svg){.absolute width=600px height=580px left=600px top=-200px}
 
 ## Specify what to tune {.theme-slide2}
 
@@ -353,6 +356,8 @@ We default to space filling designs in `tune_grid()`
 
 # Iterative Search {.theme-slide2}
 
+![](assets/big/scorpio.svg){.absolute width=600px height=580px left=600px top=-200px}
+
 ## Iterative Search Idea {.theme-slide3}
 
 <br> <br> <br>
@@ -430,6 +435,8 @@ The [{finetune}](https://finetune.tidymodels.org/) package also has functions fo
 
 # Select the model {.theme-slide1}
 
+![](assets/big/aries.svg){.absolute width=600px height=580px left=600px top=-200px}
+
 ## Seeing the results {.theme-slide2}
 
 You have fitted all the models you wanted we can take a look at the performance with `autoplot()` and `collect_metrics()`
@@ -469,6 +476,8 @@ A boosted tree model fit with [1000]{.text-pink} trees can pretend to predict wi
 Same for other tree and regularized models
 
 # Parallel {.theme-slide2}
+
+![](assets/big/virgo.svg){.absolute width=600px height=580px left=600px top=-200px}
 
 ## Running in parallel {.theme-slide3}
 
@@ -511,6 +520,8 @@ daemons(cores)
 :::
 
 # Racing {.theme-slide4}
+
+![](assets/big/capricorn.svg){.absolute width=600px height=580px left=600px top=-200px}
 
 ## Model Racing {.theme-slide1}
 
@@ -568,3 +579,5 @@ More Information
 - [tune package](https://tune.tidymodels.org/)
 - [finetune package](https://finetune.tidymodels.org/)
 - [tidy modeling with R book](https://www.tmwr.org/grid-search)
+
+![](assets/medium/bottle-butterflies.svg){.absolute width=553.524px height=576.587px left=597px top=45px}
